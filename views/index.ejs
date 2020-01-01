@@ -9,6 +9,8 @@
     <p>EJS Welcome to <%= title %></p>
     <p>Token：<span id="token"></span></p>
 
+    <a href="./login">去登录</a>
+
     <div>
       <button id="btn">获取用户信息</button>
       <div class="result" id="result">点击加载用户信息</div>
@@ -36,6 +38,10 @@
             .fail(res => {
               if (res.responseJSON.msg === "jwt expired") {
                 if (confirm("token过期，是否重新登录")) {
+                  window.location.href = "./login";
+                }
+              } else if (res.responseJSON.msg === "jwt malformed") {
+                if (confirm("token 格式不正确，是否重新登录")) {
                   window.location.href = "./login";
                 }
               }

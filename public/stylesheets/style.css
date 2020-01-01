@@ -5,6 +5,8 @@ body {
 
 a {
   color: #00B7FF;
+  display: block;
+  margin: 20px 0;
 }
 
 .result {
