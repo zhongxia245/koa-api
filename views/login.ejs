@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheets/login.css" />
+  </head>
+  <body>
+    <form class="login js-form">
+      <div class="form-item">
+        <label for="username"> 用户名： </label>
+        <input id="username" name="username" type="text" />
+      </div>
+      <div class="form-item">
+        <label for="password">密码：</label>
+        <input id="password" name="password" type="password" />
+      </div>
+      <div class="form-item-btns">
+        <button type="reset">重置</button>
+        <button type="submit">登录</button>
+      </div>
+    </form>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+      $(function() {
+        $(".js-form").on("submit", e => {
+          e.preventDefault();
+          var username = $("#username").val();
+          var password = $("#password").val();
+          $.post("/api/v1/user/login", {
+            username,
+            password
+          }).then(res => {
+            if (res.code !== 0) {
+              alert(res.msg);
+              localStorage.removeItem("token");
+            } else {
+              localStorage.setItem("token", res.data.token);
+              localStorage.setItem("token_exp", new Date().getTime());
+              window.location.href = "/";
+            }
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
