@@ -6,6 +6,7 @@ const onerror = require("koa-onerror");
 const bodyparser = require("koa-bodyparser");
 const logger = require("koa-logger");
 const koajwt = require("koa-jwt");
+const cors = require("koa2-cors");
 const CONFIG = require("./config");
 
 const errorMiddleware = require("./middlewares/error-handle");
@@ -32,6 +33,9 @@ app.use(
     extension: "ejs"
   })
 );
+
+// cors
+app.use(cors());
 
 // logger
 app.use(async (ctx, next) => {

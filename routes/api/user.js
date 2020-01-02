@@ -10,6 +10,7 @@ router.get("/", function(ctx) {
 });
 
 router.get("/info", async function(ctx) {
+  // 验证解析 token，并返回用户信息
   let decodedToken = await verify(ctx);
   ctx.send(decodedToken);
 });
@@ -24,6 +25,7 @@ router.post("/login", function(ctx) {
     param["username"] === CONFIG.user.username &&
     param["password"] === CONFIG.user.password
   ) {
+    // 把用户信息加密到 token 中
     const token = jwt.sign(
       { name: param["username"], _id: 1 },
       CONFIG.jwt.secret,
