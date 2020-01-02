@@ -36,12 +36,8 @@
               }
             })
             .fail(res => {
-              if (res.responseJSON.msg === "jwt expired") {
-                if (confirm("token过期，是否重新登录")) {
-                  window.location.href = "./login";
-                }
-              } else if (res.responseJSON.msg === "jwt malformed") {
-                if (confirm("token 格式不正确，是否重新登录")) {
+              if (res.responseJSON.code === 40100) {
+                if (confirm(`${res.responseJSON.msg}，是否重新登录`)) {
                   window.location.href = "./login";
                 }
               }

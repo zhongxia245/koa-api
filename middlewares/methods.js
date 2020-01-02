@@ -24,8 +24,8 @@ module.exports = () => {
   };
 
   return async (ctx, next) => {
-    ctx.send = render(ctx);
-    ctx.sendError = renderError(ctx);
+    ctx.success = render(ctx);
+    ctx.error = renderError(ctx);
     await next();
   };
 };

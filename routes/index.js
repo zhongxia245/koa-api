@@ -8,7 +8,13 @@ router.get("/", async ctx => {
 
 router.get("/login", async ctx => {
   await ctx.render("login", {
-    title: "登录"
+    title: "用户登录"
+  });
+});
+
+router.get("/register", async ctx => {
+  await ctx.render("register", {
+    title: "用户注册"
   });
 });
 

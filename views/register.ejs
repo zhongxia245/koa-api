@@ -16,10 +16,10 @@
       </div>
       <div class="form-item-btns">
         <button type="reset">重置</button>
-        <button type="submit">登录</button>
+        <button type="submit">注册</button>
       </div>
       <div class="form-item">
-        <a href="./register">注册新用户</a>
+        <a href="./login">已有账户</a>
       </div>
     </form>
     <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
@@ -29,7 +29,7 @@
           e.preventDefault();
           var username = $("#username").val();
           var password = $("#password").val();
-          $.post("/api/v1/user/login", {
+          $.post("/api/v1/user/register", {
             username,
             password
           }).then(res => {
@@ -37,9 +37,31 @@
               alert(res.msg);
               localStorage.removeItem("token");
             } else {
+              alert("注册成功");
               localStorage.setItem("token", res.data.token);
               localStorage.setItem("token_exp", new Date().getTime());
               window.location.href = "/";
+            }
+          });
+        });
+
+        $("#btn_register").on("click", function(e) {
+          e.preventDefault();
+          var username = $("#username").val();
+          var password = $("#password").val();
+
+          $.post("/api/v1/user/register", {
+            username,
+            password
+          }).then(res => {
+            console.log(res);
+            if (res.code !== 0) {
+              alert(res.msg);
+              localStorage.removeItem("token");
+            } else {
+              localStorage.setItem("token", res.data.token);
+              localStorage.setItem("token_exp", new Date().getTime());
+              // window.location.href = "/";
             }
           });
         });

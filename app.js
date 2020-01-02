@@ -9,8 +9,8 @@ const koajwt = require("koa-jwt");
 const cors = require("koa2-cors");
 const CONFIG = require("./config");
 
-const errorMiddleware = require("./middlewares/error-handle");
-const sendMiddleware = require("./middlewares/send-handle");
+const errorMiddleware = require("./middlewares/error");
+const methods = require("./middlewares/methods");
 
 const index = require("./routes/index");
 const user = require("./routes/api/user");
@@ -47,10 +47,11 @@ app.use(async (ctx, next) => {
 
 // jwt
 // 错误处理
-app.use(sendMiddleware());
+app.use(methods());
 app.use(errorMiddleware);
 
 // 指定不需要 jwt校验的接口
+// koa-jwt 会验证 token，并把 token 解析出来，放到 ctx.state 中
 app.use(
   koajwt({
     secret: CONFIG.jwt.secret
