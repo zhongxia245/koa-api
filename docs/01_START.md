@@ -1,22 +1,51 @@
 # Koa2 实现 Jwt 认证（一）实现基本 JWT 功能
 
- 文章中只列举比较重要的代码，其他的省略，具体可以看 [源码]()
+ 文章中只列举比较重要的代码，其他的省略，具体代码可以看 [《源码》](https://github.com/zhongxia245/koa-api/releases/tag/v1.0)。
+
+
 
 ## 一、JWT 是什么？
 
  `Json Web Token` 简称 `JWT` ，是目前最流行的**跨域认证**解决方案。
 
-[《JSON Web Token 入门教程》](http://www.ruanyifeng.com/blog/2018/07/json_web_token-tutorial.html)对 `JWT` 入门做了一个详细的介绍，这里不在展开赘述了。
+1. JWT 默认是不加密，但也是可以加密的。生成原始 Token 以后，**可以用密钥再加密一次**。
+
+2. JWT 不加密的情况下，**不能将秘密数据写入 JWT**。
+
+3. JWT 不仅可以用于认证，也可以用于交换信息。有效使用 JWT，可以降低服务器查询数据库的次数。
+
+4. JWT 的最大缺点是，由于服务器不保存 session 状态，因此无法在使用过程中废止某个 token，或者更改 token 的权限。也就是说，一旦 JWT 签发了，在到期之前就会始终有效，除非服务器部署额外的逻辑。
+
+   > TODO：后面章节会处理如何让 token 失效（不起作用）
+
+5. JWT 本身包含了认证信息，一旦泄露，任何人都可以获得该令牌的所有权限。为了减少盗用，JWT 的有效期应该设置得比较短。对于一些比较重要的权限，使用时应该再次对用户进行认证。
+
+6. 为了减少盗用，JWT 不应该使用 HTTP 协议明码传输，要使用 HTTPS 协议传输。
+
+
+
+> 以上几条来自[《JSON Web Token 入门教程》](http://www.ruanyifeng.com/blog/2018/07/json_web_token-tutorial.html)，这篇文章对 `JWT` 入门做了一个详细的介绍，这里不在展开赘述了。
 
 
 
 ### 1、JWT 原理
 
-<img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gaigomg8qtj314c0pk79y.jpg" alt="JWT流程图" style="zoom:50%;" />
+1. 客户端输入帐号密码登录
+2. 服务端，验证帐号密码是否正确，并使用 jwt 把用户名，id，密钥和过期时间，经过一个算法计算，生成一个 token
+3. jwt 把 token 给客户端，客户端找个地方存起来（前端可以存 localstorage ）
+4. 客户端把 token 放在 header 中，使用 `Authorization: Bearer ${token}` 的格式，请求需要凭证的接口。
+5. 服务端获取 token，利用 jwt 去验证 token 是否有效，并解密拿到 用户信息（第2步，写入的 用户名，id）
+6. 把响应的数据发给客户端
+
+> 注意，服务端获取请求头的时候，`Authorization` 会变成首字母小写 `authorization`
+
+<img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gaigomg8qtj314c0pk79y.jpg" alt="JWT流程图" style="zoom: 50%;" />
 
 
 
-## 一、基本实现
+
+
+## 二、基本实现
 
 这里主要是代码上的实现步骤。
 
@@ -54,7 +83,7 @@ npm run dev
 
 
 
-## 二、遗留的问题
+## 三、遗留的问题
 
 ### 1、token 过期如何刷新？
 
