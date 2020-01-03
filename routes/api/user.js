@@ -10,11 +10,7 @@ router.get("/", function(ctx) {
 });
 
 router.get("/info", async function(ctx) {
-  let doc = await User.findOne({ username: "zhongxia" }).populate("role", {
-    role_id: 1,
-    role_name: 1
-  });
-
+  let doc = await User.findOne({ username: "zhongxia" });
   ctx.success({ _id: doc._id, username: doc.username });
 });
 
