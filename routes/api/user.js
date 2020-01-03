@@ -10,8 +10,7 @@ router.get("/", function(ctx) {
 });
 
 router.get("/info", async function(ctx) {
-  let doc = await User.findOne({ username: "zhongxia" });
-  ctx.success({ _id: doc._id, username: doc.username });
+  ctx.success(ctx.state.user);
 });
 
 // 登录
